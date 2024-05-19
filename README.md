@@ -15,7 +15,15 @@ tldr:
 
 That's it!
 
-The sender looks like that:
+The table expects you to write a value with "Canvas Address" as description to write into that region.
+
+Videos can be thrown into pngs with the right sizing as:
+
+```sh
+ffmpeg -i input.mp4 -vf "scale=40:20" "stills/out_%05d.png"
+```
+
+The sender looks like that (reads all PNGs, then replays them at a fixed framerate):
 
 ```js
 import * as dgram from "dgram";
