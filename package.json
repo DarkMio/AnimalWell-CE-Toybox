@@ -1,0 +1,16 @@
+{
+  "name": "ce",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "lua-types": "^2.13.1",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "typescript": "^5.4.5",
+    "typescript-to-lua": "^1.25.1"
+  }
+}
