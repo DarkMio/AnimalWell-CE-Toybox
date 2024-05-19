@@ -24,16 +24,18 @@ declare type MemoryRecord = {
   Options: string;
   Collapsed: boolean;
   OnActivate: (
+    this: void,
     memoryrecord: MemoryRecord,
     before: boolean,
     currentState: boolean
   ) => boolean;
   OnDeactivate: (
+    this: void,
     memoryrecord: MemoryRecord,
     before: boolean,
     currentState: boolean
   ) => boolean;
-  OnDestroy: () => void;
+  OnDestroy: (this: void) => void;
   DontSave: boolean;
   DropDownLinked: boolean;
   DropDownLinkedMemrec: string;
@@ -52,18 +54,21 @@ declare type AddressList = {
   readonly SelectedRecord: MemoryRecord;
   readonly MemoryRecord: MemoryRecord[];
   [k: number]: MemoryRecord;
-  getCount: () => number;
-  getMemoryRecord: (index: number) => MemoryRecord;
-  getMemoryRecordByDescription: (description: string) => MemoryRecord;
-  getMemoryRecordByID: (ID: number) => MemoryRecord;
-  createMemoryRecord: () => MemoryRecord;
-  getSelectedRecords: () => MemoryRecord;
-  doDescriptionChange: () => void;
-  doAddressChange: () => void;
-  doTypeChange: () => void;
-  doValueChange: () => void;
-  getSelectedRecord: () => MemoryRecord;
-  setSelectedRecord: (memrec: MemoryRecord) => void;
+  getCount: (this: void) => number;
+  getMemoryRecord: (this: void, index: number) => MemoryRecord;
+  getMemoryRecordByDescription: (
+    this: void,
+    description: string
+  ) => MemoryRecord;
+  getMemoryRecordByID: (this: void, ID: number) => MemoryRecord;
+  createMemoryRecord: (this: void) => MemoryRecord;
+  getSelectedRecords: (this: void) => MemoryRecord;
+  doDescriptionChange: (this: void) => void;
+  doAddressChange: (this: void) => void;
+  doTypeChange: (this: void) => void;
+  doValueChange: (this: void) => void;
+  getSelectedRecord: (this: void) => MemoryRecord;
+  setSelectedRecord: (this: void, memrec: MemoryRecord) => void;
 };
 
 declare function writeBytes(Address: Address, ...bytes: number[]): void;

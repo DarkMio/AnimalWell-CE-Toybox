@@ -9,7 +9,7 @@
   },
   "tstl": {
     "noHeader": true,
-    "luaTarget": "universal",
+    "luaTarget": "5.3",
     "noImplicitSelf": true,
     "luaLibImport": "inline",
   }

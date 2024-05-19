@@ -1,3 +1,5 @@
+import * as socket from "socket";
+
 type Pixel = "black" | "blue" | "red" | "white";
 const bitTable: Record<Pixel, [number, number, number, number]> = {
   black: [0b00_00_00_00, 0b00_00_00_00, 0b00_00_00_00, 0b00_00_00_00],
@@ -6,10 +8,12 @@ const bitTable: Record<Pixel, [number, number, number, number]> = {
   white: [0b11_00_00_00, 0b00_11_00_00, 0b00_00_11_00, 0b00_00_00_11],
 };
 
-const t = null;
+const timer = createTimer(getMainForm());
+timer.Interval = 16;
+
 const killScript = (msg: string) => {
-  killScript(msg);
-  object_destroy(t);
+  console.log(msg);
+  timer.destroy();
 };
 
 const createArray = (size: number, fill: number) =>
@@ -18,12 +22,7 @@ const createArray = (size: number, fill: number) =>
 const offValue = createArray(200, 0x00);
 const onValue = createArray(200, 0xff);
 
-const timer = createTimer(getMainForm());
-timer.Interval = 16;
-
 const updateScreen = (() => {
-  const address = "105DD307" as Address;
-
   const bitbang = (px: Pixel[]) => {
     const result: number[] = [];
     for (let i = 0; i < px.length; i += 4) {
@@ -51,8 +50,11 @@ const updateScreen = (() => {
   };
 
   return (px: Pixel[]) => {
+    const address = getAddressList().getMemoryRecordByDescription(
+      "Canvas Address"
+    ).Address as Address;
     // px are 40 width, 20 height,
-    if (px.length != 40 * 20) {
+    if (px.length != 40 * 20 || !address) {
       killScript(
         `Array of size ${px.length} is not of expected size ${40 * 20}`
       );
@@ -90,7 +92,7 @@ const tickFunc = (() => {
 
   const table = createTable();
 
-  return function (this: any) {
+  return function (this: void) {
     if (counter <= 0) {
       timer.destroy();
       killScript("End of Program");
@@ -112,5 +114,47 @@ const tickFunc = (() => {
   };
 })();
 
-timer.OnTimer = tickFunc;
-timer.Enabled = true;
+// timer.OnTimer = tickFunc;
+// timer.Enabled = true;
+
+const thread = createThread(() => {
+  const connection = socket.udp();
+  connection.setsockname("*", 8080);
+  console.log("try me at 8080");
+  connection.settimeout(5);
+  while (true) {
+    const text = connection.receive();
+    if (!text || text.length <= 0) {
+      continue;
+    }
+
+    console.log(`Datagram is ${text.length} long`);
+    if (text.length < 800) {
+      return;
+    }
+    console.log(`Datagram: ${text.length}`);
+    const arr: Pixel[] = [];
+
+    for (var i = 0; i < 800; i++) {
+      const data = text[i];
+      switch (data) {
+        case "0":
+          arr.push("black");
+          break;
+        case "1":
+          arr.push("blue");
+          break;
+        case "2":
+          arr.push("red");
+          break;
+        case "3":
+          arr.push("white");
+          break;
+        default:
+          console.log(`error! character is: ${data}`);
+          return;
+      }
+    }
+    updateScreen(arr);
+  }
+});

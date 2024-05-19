@@ -1,7 +1,7 @@
 declare type Internet = {
-  getURL: (url: string) => string;
-  postURL: (url: string) => string;
-  destroy: () => void;
+  getURL: (this: void, url: string) => string;
+  postURL: (this: void, url: string) => string;
+  destroy: (this: void) => void;
 };
 
 declare function getInternet(name: string): Internet;

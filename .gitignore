@@ -1,5 +1,6 @@
 # don't add lua files
 *.lua
+_vid
 
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
